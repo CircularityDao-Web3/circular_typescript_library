@@ -1,0 +1,33 @@
+{
+  "name": "circular-library",
+  "version": "1.0.0",
+  "description": "A sample TypeScript library",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "mocha -r ts-node/register test/**/*.test.ts --timeout=120000"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "devDependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.0.0",
+    "@types/secp256k1": "^4.0.6",
+    "chai": "^4.3.4",
+    "mocha": "^10.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.0.0"
+  },
+  "dependencies": {
+    "secp256k1": "^4.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [],
+  "author": "Your Name",
+  "license": "MIT"
+}

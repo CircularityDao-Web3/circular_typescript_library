@@ -38,10 +38,10 @@ export async function handleErrorMessagesOnCircularResponse<T>(response: Respons
     const responseString = await response.text()
     return new Promise(async (resolve, reject) => {
         if (isJsonString(responseString)) {
-            const checkForError = (await response.json()) as CircularApiResponse<string>
+            const checkForError = JSON.parse(responseString) as CircularApiResponse<string>
             if (checkForError.Result == 200) {
                 // @ts-ignore
-                resolve((await  response.json()) as CircularApiResponse<T>)
+                resolve(JSON.parse(responseString).Response as CircularApiResponse<T>)
             } else {
                 console.error(checkForError.Response)
                 reject(checkForError.Response);

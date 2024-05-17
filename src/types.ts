@@ -2,13 +2,15 @@ export type CircularConfig = {
     name: string
     networkHex: string
     nagUrl: string
+    version: string
 }
 
 export const DefaultConfigurations = {
     CircularTestnetSandbox: {
         name: "Sandbox",
         networkHex: "0x8a20baa40c45dc5055aeb26197c203e576ef389d9acb171bd62da11dc5ad72b2",
-        nagUrl: "https://nag.circularlabs.io/NAG.php"
+        nagUrl: "https://nag.circularlabs.io/NAG.php",
+        version: "1.0.7"
     } as CircularConfig
 }
 
@@ -44,6 +46,27 @@ export type SendTransactionResponse = {
     TxID: string,
     Timestamp: string
 }
+
+export type GetTransactionResponse =  {
+    BlockID: string;
+    BroadcastFee: number;
+    DeveloperFee: number;
+    From: string;
+    GasLimit: number;
+    ID: string;
+    Instructions: number;
+    NagFee: number;
+    NodeID: string;
+    Nonce: string;
+    OSignature: string;
+    Payload: string;
+    ProcessingFee: number;
+    ProtocolFee: number;
+    Status: string;
+    Timestamp: string;
+    To: string;
+    Type: string;
+};
 
 export type CircularApiResponse<T> = {
     Result: number

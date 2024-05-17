@@ -1,4 +1,4 @@
-import {CircularApiResponse, CircularConfig, CircularWalletProvider, fixHex, GetWalletResponse} from "./types";
+import {CircularConfig, CircularWalletProvider, fixHex, GetWalletResponse} from "./types";
 import {randomBytes} from "crypto";
 import secp256k1 from "secp256k1";
 import {handleErrorMessagesOnCircularResponse, sha256, stringToHex, timestampForCircular} from "./utils";
@@ -23,21 +23,22 @@ export const keyPairFromPrivateHex = (hex: string) => {
     } as CircularWalletProvider
 }
 
-export const register = (circularConfig: CircularConfig, publicKey: string, address: string) => {
-    const From       = fixHex(address);
+export const register = (circularConfig: CircularConfig, circularWalletProvider: CircularWalletProvider) => {
+    const From       = fixHex(circularWalletProvider.address);
     const To         = From ;
     const Nonce      = "0";
     const Type       = 'C_TYPE_REGISTERWALLET';
     const PayloadObj = {
         "Action" : "CP_REGISTERWALLET",
-        "PublicKey": fixHex(publicKey)
+        "PublicKey": fixHex(circularWalletProvider.publicKey)
     };
     const jsonstr    = JSON.stringify(PayloadObj);
     const Payload    = stringToHex(jsonstr);
     const Timestamp  = timestampForCircular();
     const Signature  = "";
+    const ID = fixHex(sha256(fixHex(circularConfig.networkHex) + fixHex(From) + fixHex(To) + Payload + Nonce + Timestamp))
 
-    return sendTransaction(circularConfig, From, To, Timestamp, Type, Payload, Nonce, Signature, fixHex(circularConfig.networkHex))
+    return sendTransaction(circularConfig, ID, From, To, Timestamp, Type, Payload, Nonce, Signature)
 }
 
 export const fetchByAddress = async (circularConfig: CircularConfig, address: string) => {

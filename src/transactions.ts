@@ -1,26 +1,28 @@
-import {CircularApiResponse, CircularConfig, fixHex, SendTransactionResponse} from "./types";
+import {CircularConfig, fixHex, GetTransactionResponse, SendTransactionResponse} from "./types";
 import {handleErrorMessagesOnCircularResponse} from "./utils";
 
-export const sendTransaction = (circularConfig: CircularConfig, from: string,
+export const sendTransaction = async (circularConfig: CircularConfig, id: string, from: string,
                                       to: string, circularTimestamp: string, type: string,
                                       sha256OfPayload: string, nonce: string,
-                                      signature: string, blockchainHex: string) => {
+                                      signature: string) => {
     const data = {
+        "ID": id,
         "From": fixHex(from),
         "To": fixHex(to),
         "Timestamp": circularTimestamp,
-        "Payload": sha256OfPayload,
+        "Payload": fixHex(sha256OfPayload),
         "Nonce": nonce,
-        "Signature": signature,
-        "Blockchain": fixHex(blockchainHex),
+        "Signature": fixHex(signature),
+        "Blockchain": fixHex(circularConfig.networkHex),
         "Type": type,
-        "Version": "1.0.7"
+        "Version": circularConfig.version
     }
-    return fetch(`${circularConfig.nagUrl}?cep=Circular_AddTransaction_`, {
+    let response = await fetch(`${circularConfig.nagUrl}?cep=Circular_AddTransaction_`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
-    }).then((response) => handleErrorMessagesOnCircularResponse<SendTransactionResponse>(response))
+    });
+    return await handleErrorMessagesOnCircularResponse<SendTransactionResponse>(response);
 }
 
 export const getTransactionById = async (circularConfig: CircularConfig, txId: string) => {
@@ -36,5 +38,6 @@ export const getTransactionById = async (circularConfig: CircularConfig, txId: s
         headers: {'Content-Type': 'application/json'},
         body: data
     })
-    return (await response.json()) as CircularApiResponse<any>;
+
+    return handleErrorMessagesOnCircularResponse<GetTransactionResponse>(response);
 }
